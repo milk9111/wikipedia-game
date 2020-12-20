@@ -1,3 +1,5 @@
+console.log("Starting Wikipedia Game server");
+
 var http = require('http');
 var fs = require('fs');
 var path = require('path');
@@ -20,7 +22,7 @@ http.createServer(function (req, res) {
 
     req.url = url;
 
-    const filepath = path.join('public', url)
+    const filepath = path.join('docs', url)
 
     fs.readFile(filepath, function(err, data) {
         if (err) {

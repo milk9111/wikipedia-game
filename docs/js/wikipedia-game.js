@@ -3,16 +3,8 @@ $('.toast').toast({
     'autohide': false
 });
 
-jQuery(function() {
-    $("a").on("click", function(event) {
-        var href = $(this).attr("href");
-        if (href.substring(0, 6) === "/wiki/") {
-            event.preventDefault();
-            setGameBoard(href.substring(6));
-        }
-    });
-});
-
+let gameProps = {
+};
 
 function searchArticle(search) {
     if (search === "" || search === null || search === undefined) {
@@ -74,6 +66,14 @@ function setGameBoard(topic) {
         }
     }).done(function(msg){
         $("#loadingSpinner").addClass("d-none");
+
+        $("a").on("click", function(event){
+            var href = $(this).attr("href");
+            if (href.substring(0, 6) === "/wiki/") {
+                event.preventDefault();
+                setGameBoard(href.substring(6));
+            }
+        });
     });
 }
 

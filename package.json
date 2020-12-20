@@ -1,0 +1,25 @@
+{
+  "name": "wikipedia-game",
+  "version": "1.0.0",
+  "description": "The Wikipedia Game",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/milk9111/wikipedia-game.git"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Connor Lundberg",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/milk9111/wikipedia-game/issues"
+  },
+  "homepage": "https://github.com/milk9111/wikipedia-game#readme",
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "http": "0.0.1-security",
+    "jquery": "^3.5.1",
+    "path": "^0.12.7"
+  }
+}

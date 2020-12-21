@@ -60,6 +60,7 @@ function startGame(start, target) {
             gameProps.start = start;
             gameProps.target = target;
             gameProps.clicks = 0;
+            $("#clickCounter").text(gameProps.clicks);
 
             setGameBoard(start);
         })
@@ -96,7 +97,7 @@ function setGameBoard(topic) {
             var href = $(this).attr("href");
             if (href.substring(0, 6) === "/wiki/") {
                 event.preventDefault();
-                
+
                 gameProps.clicks++;
                 $("#clickCounter").text(gameProps.clicks);
                 setGameBoard(href.substring(6));

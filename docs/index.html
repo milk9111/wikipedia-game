@@ -36,12 +36,12 @@
       <div class="col-sm-6">
         <div class="form-group">
             <label for="startTopic">Start Topic</label>
-            <input type="text" class="form-control" id="startTopic" aria-describedby="startTopicHelp" placeholder="Mason Jar">
+            <input type="text" class="form-control" id="startTopic" aria-describedby="startTopicHelp" placeholder="Ex: Mason Jar">
             <small id="startTopicHelp" class="form-text text-muted">Make sure your topic has its own article first by using the search.</small>
         </div>
         <div class="form-group">
             <label for="targetTopic">Target Topic</label>
-            <input type="text" class="form-control" id="targetTopic" aria-describedby="targetTopicHelp" placeholder="Yellowstone National Park">
+            <input type="text" class="form-control" id="targetTopic" aria-describedby="targetTopicHelp" placeholder="Ex: Yellowstone National Park">
             <small id="targetTopicHelp" class="form-text text-muted">Make sure your topic has its own article first by using the search.</small>
         </div>
         <button class="btn btn-primary" onclick="startGame($('#startTopic').val().trim(), $('#targetTopic').val().trim());">Start Game</button>

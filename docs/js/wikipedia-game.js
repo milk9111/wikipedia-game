@@ -3,17 +3,22 @@ $('.toast').toast({
     'autohide': false
 });
 
-let gameProps = {
-};
+let gameProps = {};
 
-function searchArticle(search) {
+function searchArticle(search, callbackFn) {
     if (search === "" || search === null || search === undefined) {
+        $("#searchToast").css("background-color", "red");
+        $("#searchToastHeader").text("Failure");
+        $("#searchToastBody").text("Cannot be empty.");
+        $('#searchToast').toast('show');
         return;
     }
 
     let topic = encodeURIComponent(search);
 
     $("#loadingSpinnerSearch").removeClass("d-none");
+
+    let failedApiCall = false;
 
     $.ajax(
         {
@@ -23,6 +28,7 @@ function searchArticle(search) {
                     $("#searchToast").css("background-color", "red");
                     $("#searchToastHeader").text("Failure");
                     $("#searchToastBody").text("Could not find an article for the given topic.");
+                    failedApiCall = true;
                 } else {
                     $("#searchToast").css("background-color", "green");
                     $("#searchToastHeader").text("Success");
@@ -34,15 +40,30 @@ function searchArticle(search) {
         }
     ).done(function(msg) {
         $("#loadingSpinnerSearch").addClass("d-none");
+        if (!failedApiCall && callbackFn !== null && callbackFn !== undefined) {
+            callbackFn();
+        }
     });
 }
 
 function startGame(start, target) {
-    // TODO - Validate that start topic exists and show error if not
+    if (start === target) {
+        $("#searchToast").css("background-color", "red");
+        $("#searchToastHeader").text("Failure");
+        $("#searchToastBody").text("Cannot have same start and target.");
+        $('#searchToast').toast('show');
+        return;
+    }
 
-    // TODO - Validate that target topic exists and show error if not
+    searchArticle(start, function() {
+        searchArticle(target, function() {
+            gameProps.start = start;
+            gameProps.target = target;
+            gameProps.clicks = 0;
 
-    setGameBoard(start);
+            setGameBoard(start);
+        })
+    });
 }
 
 function setGameBoard(topic) {
@@ -60,6 +81,10 @@ function setGameBoard(topic) {
                 return;
             }
 
+            if (encodeTopic(topic).toLowerCase() === encodeTopic(gameProps.target).toLowerCase()) {
+                alert("You won the game in " + gameProps.clicks + " clicks!");
+            }
+
             $("#gameContent").removeClass("d-none");
             $("#gameContent").empty();
             $("#gameContent").append(result.parse.text);
@@ -71,6 +96,9 @@ function setGameBoard(topic) {
             var href = $(this).attr("href");
             if (href.substring(0, 6) === "/wiki/") {
                 event.preventDefault();
+                
+                gameProps.clicks++;
+                $("#clickCounter").text(gameProps.clicks);
                 setGameBoard(href.substring(6));
             }
         });

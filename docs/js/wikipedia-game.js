@@ -97,18 +97,26 @@ function setGameBoard(topic) {
 
             $("#mw-content-text").empty();
             $("#mw-content-text").append(result.parse.text);
-
-            if (encodeTopic(topic).toLowerCase() === encodeTopic(gameProps.target).toLowerCase()) {
-                alert("You won the game in " + gameProps.clicks + " clicks!");
-            }
         }
     }).done(function(msg){
         hideElement("#loadingSpinner");
 
+        let hasWon = false;
+
+        if (encodeTopic(topic).toLowerCase() === encodeTopic(gameProps.target).toLowerCase()) {
+            alert("You won the game in " + gameProps.clicks + " clicks!");
+            hasWon = true;
+        }
+
         $("a").on("click", function(event){
-            var href = $(this).attr("href");
-            if (href.substring(0, 6) === "/wiki/") {
+            let href = $(this).attr("href");
+            let urlPrefix = href.substring(0, 6);
+            if (urlPrefix === "/wiki/") {
                 event.preventDefault();
+
+                if (hasWon) {
+                    return; 
+                }
 
                 if (!gameProps.isRedirectPage) {
                     gameProps.clicks++;
@@ -117,6 +125,9 @@ function setGameBoard(topic) {
                 $("#clickCounter").text(gameProps.clicks);
 
                 setGameBoard(href.substring(6));
+            } else if (urlPrefix[0] !== '#' && urlPrefix[0] !== '/') {
+                event.preventDefault();
+                alert("External links aren't allowed!");
             }
         });
     });

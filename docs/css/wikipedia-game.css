@@ -41,14 +41,11 @@
   padding-left: 40px;
 }
 
-#historyListLabel {
-  border-bottom: 1px solid darkgrey;
+#historyListLabel:hover {
+  border-bottom: 1px solid black;
 }
 
 #historyListToggle {
-  margin-left: 10px;
-}
-
-#historyListToggle:hover {
-  border-bottom: 1px solid black;
+  margin-left: 5px;
+  margin-bottom: 3px;
 }

@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="css/wikipedia.css">
   <link rel="stylesheet" type="text/css" href="css/wikipedia-game.css">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap-icons.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -66,8 +67,20 @@
             <br/>
             <br/>
             <div class="form-group">
-                <label for="clickCounter">Number of Clicks</label>
-                <h5 id="clickCounter">0</h5>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <label for="clickCounter">Number of Clicks</label>
+                            <h5 id="clickCounter">0</h5>
+                        </div>
+                        <div class="col-sm-6">
+                            <label id="historyListLabel" for="historyList">The Rabbit Hole</label><i id="historyListToggle" class="bi bi-chevron-down" onclick="toggleHistory();"></i>
+                            <ul id="historyList" class="d-none">
+            
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
       </div>
   </div>
@@ -86,7 +99,7 @@
             <div id="bodyContent" class="mw-body-content">
                 <div id="siteSub" class="noprint">From Wikipedia, the free encyclopedia</div>
                 <div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr">
-
+                    <!-- Wikipedia article content gets loaded here -->
                 </div>
             </div>
         </div>

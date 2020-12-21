@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/milk9111/wikipedia-game#readme",
   "dependencies": {
+    "bootstrap-icons": "^1.2.1",
     "fs": "0.0.1-security",
     "http": "0.0.1-security",
     "jquery": "^3.5.1",

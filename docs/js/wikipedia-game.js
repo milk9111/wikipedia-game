@@ -7,7 +7,9 @@ let gameProps = {
     start: "",
     target: "",
     clicks: 0,
-    isRedirectPage: false
+    isRedirectPage: false,
+    history: [],
+    isHistoryShowing: false
 };
 
 function searchArticle(search, callbackFn) {
@@ -57,6 +59,9 @@ function startGame(start, target) {
             gameProps.start = start;
             gameProps.target = target;
             gameProps.clicks = 0;
+            gameProps.history = [];
+
+            $("#historyList").empty();
             $("#clickCounter").text(gameProps.clicks);
 
             setGameBoard(start);
@@ -79,18 +84,23 @@ function setGameBoard(topic) {
                 return;
             }
 
-            if (encodeTopic(topic).toLowerCase() === encodeTopic(gameProps.target).toLowerCase()) {
-                alert("You won the game in " + gameProps.clicks + " clicks!");
-            }
-
             gameProps.isRedirectPage = result.parse.text.includes("redirectMsg");
             gameProps.isRedirectPage ? showElement("#redirectMessage") : hideElement("#redirectMessage");
 
             showElement("#content");
             $("#firstHeading").text(result.parse.title);
 
+            if (!gameProps.isRedirectPage) {
+                gameProps.history.push(result.parse.title);
+                updateHistoryList();
+            }
+
             $("#mw-content-text").empty();
             $("#mw-content-text").append(result.parse.text);
+
+            if (encodeTopic(topic).toLowerCase() === encodeTopic(gameProps.target).toLowerCase()) {
+                alert("You won the game in " + gameProps.clicks + " clicks!");
+            }
         }
     }).done(function(msg){
         hideElement("#loadingSpinner");
@@ -110,6 +120,24 @@ function setGameBoard(topic) {
             }
         });
     });
+}
+
+function toggleHistory() {
+    gameProps.isHistoryShowing = !gameProps.isHistoryShowing;
+    gameProps.isHistoryShowing ? showElement("#historyList") : hideElement("#historyList");
+
+    $("#historyListToggle").removeClass("bi-chevron-down");
+    $("#historyListToggle").removeClass("bi-chevron-up");
+
+    $("#historyListToggle").addClass(gameProps.isHistoryShowing ? "bi-chevron-up" : "bi-chevron-down");
+}
+
+function updateHistoryList() {
+    if (gameProps.history.length === 0) {
+        return;
+    }
+
+    $("#historyList").append("<li>" + gameProps.history[gameProps.history.length - 1] + "</li>");
 }
 
 function setSuccessToast(message) {

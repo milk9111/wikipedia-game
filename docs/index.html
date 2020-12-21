@@ -5,8 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="css/wikipedia-game.css">
   <link rel="stylesheet" type="text/css" href="css/wikipedia.css">
+  <link rel="stylesheet" type="text/css" href="css/wikipedia-game.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -29,9 +29,9 @@
         </div>
     </div>
   <div class="row">
-    <h2 class="wiki-center">The Wikipedia Game!</h2>
+    <h1 class="wiki-center">The Wikipedia Game!</h1>
   </div>
-  <hr/>
+  <hr style="margin-bottom: 10px;"/>
   <div class="row">
       <div class="col-sm-6">
         <div class="form-group">
@@ -51,15 +51,20 @@
             <div class="form-group">
                 <div class="form-group">
                     <label for="searchTopic">Search</label>
-                    <input type="text" class="form-control" id="searchTopic" placeholder="">
+                    <div class="md-form mt-0">
+                        <button class="btn btn-info searchIcon" id="gameSearchButton" onclick="searchArticle($('#searchTopic').val().trim());"></button>
+                        <input type="text" class="form-control" id="searchTopic" placeholder="">
+                    </div>
                 </div>
-                <button class="btn btn-info" id="searchButton" onclick="searchArticle($('#searchTopic').val().trim());">Search</button>
+                
                 <div class="d-none" id="loadingSpinnerSearch">
                     <div class="spinner-border" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
                 </div>
             </div>
+            <br/>
+            <br/>
             <div class="form-group">
                 <label for="clickCounter">Number of Clicks</label>
                 <h5 id="clickCounter">0</h5>
@@ -68,6 +73,7 @@
   </div>
   <br>
   <br>
+  <p class="text-danger d-none" id="redirectMessage">*Clicks are not counted on redirect pages</p>
   <div class="d-none" id="gameBounds">
     <div class="row" id="game">
         <div class="d-none" id="loadingSpinner">
@@ -75,8 +81,14 @@
                 <span class="sr-only">Loading...</span>
             </div>
         </div>
-        <div class="d-none" id="gameContent">
+        <div class="d-none mw-body" id="content" role="main">
+            <h1 id="firstHeading" class="firstHeading" lang="en"></h1>
+            <div id="bodyContent" class="mw-body-content">
+                <div id="siteSub" class="noprint">From Wikipedia, the free encyclopedia</div>
+                <div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr">
 
+                </div>
+            </div>
         </div>
   </div>
 </div>
@@ -86,7 +98,7 @@
     .addEventListener("keyup", function(event) {
         event.preventDefault();
         if (event.code === "Enter") {
-            document.getElementById("searchButton").click();
+            document.getElementById("gameSearchButton").click();
         }
     });
 

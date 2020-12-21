@@ -1,7 +1,9 @@
-.wiki-center {
+.wiki-center, #loadingSpinner {
   text-align: center;
   width: 50%;
-  margin: 20px 300px 0px;
+  border: none;
+  margin: auto;
+  padding-bottom: 20px;
 }
 
 .form-control::placeholder {
@@ -16,8 +18,25 @@
   font-style: italic;
 }
 
-#game {
-  border: 1px solid darkgrey;
-  padding: 20px;
-  border-radius: 7px;
+.md-form.mt-0{
+  display:flex;
+  align-items: center;  
+}
+
+.searchIcon{
+  position: absolute;
+  z-index: 1;
+  border: none;
+  padding: 10px;
+  margin-left: 13px;
+  background: no-repeat center url(https://en.wikipedia.org/w/skins/Vector/resources/skins.vector.styles/images/search.svg?cd211);
+  opacity: 0.67;
+}
+
+.searchIcon:hover {
+  background-color: darkgrey;
+}
+
+.searchIcon + input{
+  padding-left: 40px;
 }

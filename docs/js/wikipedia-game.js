@@ -3,20 +3,23 @@ $('.toast').toast({
     'autohide': false
 });
 
-let gameProps = {};
+let gameProps = {
+    start: "",
+    target: "",
+    clicks: 0,
+    isRedirectPage: false
+};
 
 function searchArticle(search, callbackFn) {
     if (search === "" || search === null || search === undefined) {
-        $("#searchToast").css("background-color", "red");
-        $("#searchToastHeader").text("Failure");
-        $("#searchToastBody").text("Cannot be empty.");
-        $('#searchToast').toast('show');
+        setFailureToast("Cannot be empty.");
+        showToast();
         return;
     }
 
     let topic = encodeURIComponent(search);
 
-    $("#loadingSpinnerSearch").removeClass("d-none");
+    showElement("#loadingSpinnerSearch");
 
     let failedApiCall = false;
 
@@ -25,21 +28,17 @@ function searchArticle(search, callbackFn) {
             url: "https://en.wikipedia.org/w/api.php?origin=*&action=query&format=json&list=prefixsearch&pssearch=" + topic, 
             success: function(result, status, xhr){
                 if (xhr.status !== 200 || result === null || result.query === null || result.query.prefixsearch === null || result.query.prefixsearch.length === 0 || !topicExists(search, result.query.prefixsearch)) {
-                    $("#searchToast").css("background-color", "red");
-                    $("#searchToastHeader").text("Failure");
-                    $("#searchToastBody").text("Could not find an article for the given topic.");
+                    setFailureToast("Could not find an article for the given topic.");
                     failedApiCall = true;
                 } else {
-                    $("#searchToast").css("background-color", "green");
-                    $("#searchToastHeader").text("Success");
-                    $("#searchToastBody").text("That topic exists!");
+                    setSuccessToast("That topic exists!");
                 }
 
-                $('#searchToast').toast('show');
+                showToast();
             }
         }
     ).done(function(msg) {
-        $("#loadingSpinnerSearch").addClass("d-none");
+        hideElement("#loadingSpinnerSearch");
         if (!failedApiCall && callbackFn !== null && callbackFn !== undefined) {
             callbackFn();
         }
@@ -48,10 +47,8 @@ function searchArticle(search, callbackFn) {
 
 function startGame(start, target) {
     if (start === target) {
-        $("#searchToast").css("background-color", "red");
-        $("#searchToastHeader").text("Failure");
-        $("#searchToastBody").text("Cannot have same start and target.");
-        $('#searchToast').toast('show');
+        setFailureToast("Cannot have same start and target.");
+        showToast();
         return;
     }
 
@@ -68,10 +65,10 @@ function startGame(start, target) {
 }
 
 function setGameBoard(topic) {
-    $("#gameContent").addClass("d-none");
-    $("#gameBounds").removeClass("d-none");
+    hideElement("#content");
+    showElement("#gameBounds");
 
-    $("#loadingSpinner").removeClass("d-none");
+    showElement("#loadingSpinner");
 
     $.ajax({
         method: "GET",
@@ -86,24 +83,57 @@ function setGameBoard(topic) {
                 alert("You won the game in " + gameProps.clicks + " clicks!");
             }
 
-            $("#gameContent").removeClass("d-none");
-            $("#gameContent").empty();
-            $("#gameContent").append(result.parse.text);
+            gameProps.isRedirectPage = result.parse.text.includes("redirectMsg");
+            gameProps.isRedirectPage ? showElement("#redirectMessage") : hideElement("#redirectMessage");
+
+            showElement("#content");
+            $("#firstHeading").text(result.parse.title);
+
+            $("#mw-content-text").empty();
+            $("#mw-content-text").append(result.parse.text);
         }
     }).done(function(msg){
-        $("#loadingSpinner").addClass("d-none");
+        hideElement("#loadingSpinner");
 
         $("a").on("click", function(event){
             var href = $(this).attr("href");
             if (href.substring(0, 6) === "/wiki/") {
                 event.preventDefault();
 
-                gameProps.clicks++;
+                if (!gameProps.isRedirectPage) {
+                    gameProps.clicks++;
+                }
+                
                 $("#clickCounter").text(gameProps.clicks);
+
                 setGameBoard(href.substring(6));
             }
         });
     });
+}
+
+function setSuccessToast(message) {
+    $("#searchToast").css("background-color", "green");
+    $("#searchToastHeader").text("Success");
+    $("#searchToastBody").text(message);
+}
+
+function setFailureToast(message) {
+    $("#searchToast").css("background-color", "red");
+    $("#searchToastHeader").text("Failure");
+    $("#searchToastBody").text(message);
+}
+
+function showToast() {
+    $('#searchToast').toast('show');
+}
+
+function hideElement(el) {
+    $(el).addClass("d-none");
+}
+
+function showElement(el) {
+    $(el).removeClass("d-none");
 }
 
 function encodeTopic(topic) {

@@ -50,18 +50,21 @@
       </div>
       <div class="col-sm-6">
             <div class="form-group">
-                <div class="form-group">
-                    <label for="searchTopic">Search</label>
-                    <div class="md-form mt-0">
-                        <button type="search" class="btn btn-info searchIcon" id="gameSearchButton" onclick="searchArticle($('#searchTopic').val().trim(), populateSearchDropdown);"></button>
-                        <input type="text" class="form-control" id="searchTopic" placeholder="">
-                    </div>
-                    <div class="dropdown">
-                        <div class="dropdown-menu d-none" id="topicSearchDropdown">
-                        
+                <form id="searchForm" action>
+                    <div class="form-group">
+                        <label for="searchTopic">Search</label>
+                        <div class="md-form mt-0">
+                            <button type="search" class="btn btn-info searchIcon" id="gameSearchButton" onclick="searchArticle($('#searchTopic').val().trim(), populateSearchDropdown);"></button>
+                            <input type="text" class="form-control" id="searchTopic" placeholder="">
+                        </div>
+                        <div class="dropdown">
+                            <div class="dropdown-menu d-none" id="topicSearchDropdown">
+                            
+                            </div>
                         </div>
                     </div>
-                </div>
+                </form>
+
                 
                 <div class="d-none" id="loadingSpinnerSearch" style="z-index: 999;">
                     <div class="spinner-border" role="status">
@@ -112,6 +115,11 @@
 </div>
 
 <script>
+    $('#searchForm').submit(function()
+    {
+        return false;
+    });
+
     document.getElementById("searchTopic")
     .addEventListener("keyup", function(event) {
         event.preventDefault();

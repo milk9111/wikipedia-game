@@ -53,12 +53,17 @@
                 <div class="form-group">
                     <label for="searchTopic">Search</label>
                     <div class="md-form mt-0">
-                        <button class="btn btn-info searchIcon" id="gameSearchButton" onclick="searchArticle($('#searchTopic').val().trim());"></button>
+                        <button class="btn btn-info searchIcon" id="gameSearchButton" onclick="searchArticle($('#searchTopic').val().trim(), populateSearchDropdown);"></button>
                         <input type="text" class="form-control" id="searchTopic" placeholder="">
+                    </div>
+                    <div class="dropdown">
+                        <div class="dropdown-menu d-none" id="topicSearchDropdown">
+                        
+                        </div>
                     </div>
                 </div>
                 
-                <div class="d-none" id="loadingSpinnerSearch">
+                <div class="d-none" id="loadingSpinnerSearch" style="z-index: 999;">
                     <div class="spinner-border" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>

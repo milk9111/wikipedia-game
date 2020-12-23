@@ -13,6 +13,8 @@ let gameProps = {
 };
 
 function searchArticle(search, callbackFn) {
+    hideElement("#topicSearchDropdown");
+
     if (search === "" || search === null || search === undefined) {
         setFailureToast("Cannot be empty.");
         showToast();
@@ -45,6 +47,15 @@ function searchArticle(search, callbackFn) {
             callbackFn();
         }
     });
+}
+
+function populateSearchDropdown() {
+    let searchTopic = $('#searchTopic').val().trim();
+
+    let url = "https://en.wikipedia.org/wiki/" + encodeTopic(searchTopic);
+
+    showElement("#topicSearchDropdown");
+    $("#topicSearchDropdown").html("<a target=\"_blank\" style=\"color: blue; text-decoration: underline;\" class=\"dropdown-item\" href=\"" + url + "\">" + url + "</a>");
 }
 
 function startGame(start, target) {

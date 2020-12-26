@@ -34,46 +34,56 @@
   </div>
   <hr style="margin-bottom: 10px;"/>
   <div class="row">
+        <!-- TOPIC INPUT SECTION -->
         <div class="col-sm-6">
-            <form id="submitForm" action>
-                <div class="form-group">
-                    <label for="startTopic">Start Topic</label>
-                    <input type="text" class="form-control" id="startTopic" aria-describedby="startTopicHelp" placeholder="Ex: Mason Jar">
-                    <small id="startTopicHelp" class="form-text text-muted">Make sure your topic has its own article first by using the search.</small>
-                </div>
-                <div class="form-group">
-                    <label for="targetTopic">Target Topic</label>
-                    <input type="text" class="form-control" id="targetTopic" aria-describedby="targetTopicHelp" placeholder="Ex: Yellowstone National Park">
-                    <small id="targetTopicHelp" class="form-text text-muted">Make sure your topic has its own article first by using the search.</small>
-                </div>
-                <button type="submit" class="btn btn-primary" onclick="startGame($('#startTopic').val().trim(), $('#targetTopic').val().trim());">Start Game</button>
-            </form>
+            <div id="submitForm">
+                <form action>
+                    <div class="form-group">
+                        <label for="startTopic">Start Topic</label>
+                        <input type="text" class="form-control" id="startTopic" aria-describedby="startTopicHelp" placeholder="Ex: Mason Jar">
+                        <small id="startTopicHelp" class="form-text text-muted">Make sure your topic has its own article first by using the search.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="targetTopic">Target Topic</label>
+                        <input type="text" class="form-control" id="targetTopic" aria-describedby="targetTopicHelp" placeholder="Ex: Yellowstone National Park">
+                        <small id="targetTopicHelp" class="form-text text-muted">Make sure your topic has its own article first by using the search.</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary" onclick="startGame($('#startTopic').val().trim(), $('#targetTopic').val().trim());">Start Game</button>
+                </form>
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-primary d-none" id="newGameButton" onclick="confirmNewGame();">New Game?</button>
+            </div>
+            
       </div>
       <div class="col-sm-6">
+          <!-- SEARCH INPUT SECTION -->
             <div class="form-group">
-                <form id="searchForm" action>
-                    <div class="form-group">
-                        <label for="searchTopic">Search</label>
-                        <div class="md-form mt-0">
-                            <button type="search" class="btn btn-info searchIcon" id="gameSearchButton" onclick="searchArticle($('#searchTopic').val().trim(), populateSearchDropdown);"></button>
-                            <input type="text" class="form-control" id="searchTopic" placeholder="">
-                        </div>
-                        <div class="dropdown">
-                            <div class="dropdown-menu d-none" id="topicSearchDropdown">
-                            
+                <div id="searchForm">
+                    <form action>
+                        <div class="form-group">
+                            <label for="searchTopic">Search</label>
+                            <div class="md-form mt-0">
+                                <button type="search" class="btn btn-info searchIcon" id="gameSearchButton" onclick="searchArticle($('#searchTopic').val().trim(), populateSearchDropdown);"></button>
+                                <input type="text" class="form-control" id="searchTopic" placeholder="">
+                            </div>
+                            <div class="dropdown">
+                                <div class="dropdown-menu d-none" id="topicSearchDropdown">
+                                
+                                </div>
                             </div>
                         </div>
+                    </form>
+                    <div class="d-none" id="loadingSpinnerSearch" style="z-index: 999;">
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
                     </div>
-                </form>
-                
-                <div class="d-none" id="loadingSpinnerSearch" style="z-index: 999;">
-                    <div class="spinner-border" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
+                    <br/>
+                    <br/>
                 </div>
             </div>
-            <br/>
-            <br/>
             <div class="form-group">
                 <div class="container">
                     <div class="row">
@@ -94,8 +104,24 @@
   </div>
   <br>
   <br>
+  <!-- MODAL SECTION -->
+  <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="modalClose">&times;</span>
+
+            <div class="d-none" id="modalContent_default">
+                <p>Some text in the Modal..</p>
+            </div>
+
+            <div class="d-none" id="modalContent_newGame">
+                <p>Are you sure you want to start a new game?</p>
+                <button class="btn btn-secondary" id="modalContent_newGame_yes">Yes</button>
+                <button class="btn btn-secondary" id="modalContent_newGame_cancel">Cancel</button>
+            </div>
+        </div>
+  </div>
   <p class="text-danger d-none" id="redirectMessage">*Clicks are not counted on redirect pages</p>
-  <div class="d-none" id="gameBounds">
+<div class="d-none" id="gameBounds">
     <div class="row" id="game">
         <div class="d-none" id="loadingSpinner">
             <div class="spinner-border" role="status">
@@ -143,6 +169,16 @@
     .addEventListener("click", function(event) {
         event.preventDefault();
         $("targetTopic").css("border", "1px solid #ced4da");
+    });
+
+    window.onclick = function(event) {
+        if (event.target == $("#myModal")) {
+            closeModal();
+        }
+    }
+
+    $("#modalClose").on("click", function(event) {
+        closeModal();
     });
 
     //startGame('mario', '');

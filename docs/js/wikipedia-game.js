@@ -9,7 +9,11 @@ let gameProps = {
     clicks: 0,
     isRedirectPage: false,
     history: [],
-    isHistoryShowing: false
+    isHistoryShowing: false,
+    hasWon: false,
+    modal: {
+        contentId: "modalContent_default"
+    }
 };
 
 function searchArticle(search, callbackFn) {
@@ -71,9 +75,16 @@ function startGame(start, target) {
             gameProps.target = target;
             gameProps.clicks = 0;
             gameProps.history = [];
+            gameProps.isHistoryShowing = false;
+            gameProps.hasWon = false;
 
             $("#historyList").empty();
             $("#clickCounter").text(gameProps.clicks);
+
+            hideElement("#searchForm");
+            hideElement("#submitForm");
+
+            showElement("#newGameButton");
 
             setGameBoard(start);
         })
@@ -112,11 +123,11 @@ function setGameBoard(topic) {
     }).done(function(msg){
         hideElement("#loadingSpinner");
 
-        let hasWon = false;
+        gameProps.hasWon = false;
 
         if (encodeTopic(topic).toLowerCase() === encodeTopic(gameProps.target).toLowerCase()) {
+            gameProps.hasWon = true;
             alert("You won the game in " + gameProps.clicks + " clicks!");
-            hasWon = true;
         }
 
         $("a").on("click", function(event){
@@ -125,7 +136,7 @@ function setGameBoard(topic) {
             if (urlPrefix === "/wiki/") {
                 event.preventDefault();
 
-                if (hasWon) {
+                if (gameProps.hasWon) {
                     return; 
                 }
 
@@ -144,6 +155,55 @@ function setGameBoard(topic) {
     });
 }
 
+function confirmNewGame() {
+    // if the player has won and they select a new game then don't bother with the modal
+    if (gameProps.hasWon) {
+        newGame();
+        return;
+    }
+
+    setModal({
+        contentId: "modalContent_newGame",
+        buttons: [
+            {
+                id: "modalContent_newGame_yes",
+                callbackFn: newGame 
+            },
+            {
+                id: "modalContent_newGame_cancel",
+                callbackFn: closeModal 
+            }
+        ]
+    });
+
+    showModal();
+}
+
+function newGame() {
+    gameProps.start = "";
+    gameProps.target = "";
+    gameProps.clicks = 0;
+    gameProps.history = [];
+    gameProps.isHistoryShowing = false;
+    gameProps.hasWon = false;
+    toggleHistory();
+
+    $("#startTopic").val("");
+    $("#targetTopic").val("");
+    $("#searchTopic").val("");
+
+    showElement("#searchForm");
+    showElement("#submitForm");
+
+    hideElement("#content");
+    hideElement("#newGameButton");
+
+    closeModal();
+
+    $("#historyList").empty();
+    $("#clickCounter").text(gameProps.clicks);
+}
+
 function toggleHistory() {
     gameProps.isHistoryShowing = !gameProps.isHistoryShowing;
     gameProps.isHistoryShowing ? showElement("#historyList") : hideElement("#historyList");
@@ -159,7 +219,9 @@ function updateHistoryList() {
         return;
     }
 
-    $("#historyList").append("<li>" + gameProps.history[gameProps.history.length - 1] + "</li>");
+    let startTopicSignifier = gameProps.history.length === 1 ? " - <b> Start Topic </b>" : "";
+
+    $("#historyList").append("<li>" + gameProps.history[gameProps.history.length - 1] + startTopicSignifier + "</li>");
 }
 
 function setSuccessToast(message) {
@@ -202,4 +264,32 @@ function topicExists(topic, searchResults) {
     });
 
     return found;
+}
+
+function setModal(settings) {
+    hideElement("#" + gameProps.modal.contentId);
+
+    let content = $("#" + settings.contentId);
+    if (content === null || content === undefined) {
+        settings.contentId = "modalContent_default";
+        content = $("#" + settings.contentId);
+    }
+
+    gameProps.modal.contentId = settings.contentId;
+    
+    if (settings.buttons !== null) {
+        $.each(settings.buttons, function(index, value) {
+            $("#" + value.id).on("click", value.callbackFn);
+        });
+    }
+
+    showElement("#" + gameProps.modal.contentId);
+}
+
+function showModal() {
+    $("#myModal").css("display", "block");
+}
+
+function closeModal() {
+    $("#myModal").css("display", "none");
 }

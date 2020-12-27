@@ -177,6 +177,7 @@ function startGame(start, target) {
 
             $("#historyList").empty();
             $("#clickCounter").text(gameProps.clicks);
+            $("#followClickCounter").text(gameProps.clicks);
 
             hideElement("#searchForm");
             hideElement("#submitForm");
@@ -184,7 +185,7 @@ function startGame(start, target) {
             showElement("#newGameSection");
             showElement("#newGameButton");
             showElement("#gameStats");
-            showElement("#backToTopButton");
+            showElement("#followingElements");
 
             setGameBoard(start);
         }})
@@ -245,6 +246,7 @@ function setGameBoard(topic) {
                 }
                 
                 $("#clickCounter").text(gameProps.clicks);
+                $("#followClickCounter").text(gameProps.clicks);
 
                 setGameBoard(href.substring(6));
             } else if (urlPrefix[0] !== '#' && urlPrefix[0] !== '/') {
@@ -313,7 +315,7 @@ function newGame() {
     hideElement("#copied");
     hideElement("#gameStats");
     hideElement("#redirectMessage");
-    hideElement("#backToTopButton");
+    hideElement("#followingElements");
 
     closeModal();
 

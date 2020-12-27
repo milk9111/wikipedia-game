@@ -138,7 +138,10 @@
         </div>
   </div>
   <p class="text-danger d-none" id="redirectMessage">*Clicks are not counted on redirect pages</p>
-  <button onclick="topFunction()" class="d-none" id="backToTopButton" title="Go to top">Top</button>
+    <div id="followingElements" class="d-none">
+        <p class="btn btn-light" id="followClickCounter">0</p>
+        <button onclick="topFunction()" id="backToTopButton" title="Go to top">Top</button>
+    </div>
 <div class="d-none" id="gameBounds">
     <div class="row" id="game">
         <div class="d-none" id="loadingSpinner">

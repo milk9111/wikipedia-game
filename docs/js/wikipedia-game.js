@@ -29,6 +29,7 @@ let gameProps = {
     history: [],
     isHistoryShowing: false,
     hasWon: false,
+    inProgress: false,
     url: window.location.href,
     baseUrl: getBaseUrl(),
     queryParams: "",
@@ -162,6 +163,7 @@ function startGame(start, target) {
             gameProps.history = [];
             gameProps.isHistoryShowing = false;
             gameProps.hasWon = false;
+            gameProps.inProgress = true;
             gameProps.queryParams = "";
 
             if (gameProps.url === gameProps.baseUrl) {
@@ -182,6 +184,7 @@ function startGame(start, target) {
             showElement("#newGameSection");
             showElement("#newGameButton");
             showElement("#gameStats");
+            showElement("#backToTopButton");
 
             setGameBoard(start);
         }})
@@ -288,6 +291,7 @@ function newGame() {
     gameProps.history = [];
     gameProps.isHistoryShowing = false;
     gameProps.hasWon = false;
+    gameProps.inProgress = false;
     gameProps.url = gameProps.baseUrl;
     window.history.pushState("", "", gameProps.url);
     toggleHistory();
@@ -309,6 +313,7 @@ function newGame() {
     hideElement("#copied");
     hideElement("#gameStats");
     hideElement("#redirectMessage");
+    hideElement("#backToTopButton");
 
     closeModal();
 
@@ -413,6 +418,12 @@ function showModal() {
 
 function closeModal() {
     $("#myModal").css("display", "none");
+}
+
+function topFunction() {
+    $('html, body').animate({
+        scrollTop: $("body").offset().top
+    }, 500);
 }
 
 function getQueryParameterByName(name, url = window.location.href) {

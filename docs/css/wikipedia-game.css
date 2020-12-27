@@ -116,3 +116,19 @@
 #copied {
   margin: 5px 0px 0px 5px;
 }
+
+.goodTopic {
+  background-color: #99ff99;
+}
+
+.goodTopic:focus {
+  background-color: #99ff99;
+}
+
+.badTopic {
+  background-color: #ff9999;
+}
+
+.badTopic:focus {
+  background-color: #ff9999;
+}

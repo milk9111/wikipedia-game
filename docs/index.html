@@ -80,7 +80,7 @@
                         <div class="form-group">
                             <label for="searchTopic">Search</label>
                             <div class="md-form mt-0">
-                                <button type="search" class="btn btn-info searchIcon" id="gameSearchButton" onclick="searchArticle($('#searchTopic').val().trim(), populateSearchDropdown);"></button>
+                                <button type="search" class="btn btn-info searchIcon" id="gameSearchButton" onclick="lookupSearchTopic($('#searchTopic').val().trim());"></button>
                                 <input type="text" class="form-control" id="searchTopic" placeholder="">
                             </div>
                             <div class="dropdown">
@@ -176,16 +176,22 @@
         }
     });
 
+    document.getElementById("searchTopic")
+    .addEventListener("click", function(event) {
+        $("#searchTopic").css("border", "1px solid #ced4da");
+        clearTopicStatus("#searchTopic");
+    });
+
     document.getElementById("startTopic")
     .addEventListener("click", function(event) {
-        event.preventDefault();
-        $("startTopic").css("border", "1px solid #ced4da");
+        $("#startTopic").css("border", "1px solid #ced4da");
+        clearTopicStatus("#startTopic");
     });
 
     document.getElementById("targetTopic")
     .addEventListener("click", function(event) {
-        event.preventDefault();
-        $("targetTopic").css("border", "1px solid #ced4da");
+        $("#targetTopic").css("border", "1px solid #ced4da");
+        clearTopicStatus("#targetTopic");
     });
 
     window.onclick = function(event) {

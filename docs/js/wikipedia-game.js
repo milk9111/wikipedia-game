@@ -19,8 +19,6 @@ jQuery(function() {
     hideElement("#submitForm");
 
     startGame(startTopic, targetTopic);
-
-
 });
 
 let gameProps = {
@@ -67,16 +65,16 @@ function copyToClipboard() {
     showElement("#copied");
 }
 
-function searchArticle(search, callbackFn) {
+function searchArticle(config) {
     hideElement("#topicSearchDropdown");
 
-    if (isNullOrEmpty(search)) {
+    if (isNullOrEmpty(config.search)) {
         setFailureToast("Cannot be empty.");
         showToast();
         return;
     }
 
-    let topic = encodeURIComponent(search);
+    let topic = encodeURIComponent(config.search);
 
     showElement("#loadingSpinnerSearch");
 
@@ -86,11 +84,17 @@ function searchArticle(search, callbackFn) {
         {
             url: "https://en.wikipedia.org/w/api.php?origin=*&action=query&format=json&list=prefixsearch&pssearch=" + topic, 
             success: function(result, status, xhr){
-                if (xhr.status !== 200 || result === null || result.query === null || result.query.prefixsearch === null || result.query.prefixsearch.length === 0 || !topicExists(search, result.query.prefixsearch)) {
+                if (xhr.status !== 200 || result === null || result.query === null || result.query.prefixsearch === null || result.query.prefixsearch.length === 0 || !topicExists(config.search, result.query.prefixsearch)) {
                     setFailureToast("Could not find an article for the given topic.");
                     failedApiCall = true;
                 } else {
                     setSuccessToast("That topic exists!");
+                }
+
+                if (!isNullOrEmpty(config.topicInputId)) {
+                    clearTopicStatus(config.topicInputId);
+
+                    $(config.topicInputId).addClass(failedApiCall ? "badTopic" : "goodTopic");
                 }
 
                 showToast();
@@ -98,8 +102,8 @@ function searchArticle(search, callbackFn) {
         }
     ).done(function(msg) {
         hideElement("#loadingSpinnerSearch");
-        if (!failedApiCall && callbackFn !== null && callbackFn !== undefined) {
-            callbackFn();
+        if (!failedApiCall && config.callbackFn !== null && config.callbackFn !== undefined) {
+            config.callbackFn();
         }
     });
 }
@@ -113,15 +117,45 @@ function populateSearchDropdown() {
     $("#topicSearchDropdown").html("<a target=\"_blank\" style=\"color: blue; text-decoration: underline;\" class=\"dropdown-item\" href=\"" + url + "\">" + url + "</a>");
 }
 
+function lookupSearchTopic(topic) {
+    if (isNullOrEmpty(topic)) {
+        $("#searchTopic").addClass("badTopic");
+        setFailureToast("Search field is empty");
+        showToast();
+        return;
+    }
+
+    searchArticle({ search: topic, callbackFn: populateSearchDropdown, topicInputId: "#searchTopic" });
+}
+
 function startGame(start, target) {
+    let hasFailed = false;
+    if (isNullOrEmpty(start)) {
+        hasFailed = true;
+        $("#startTopic").addClass("badTopic");
+    }
+
+    if (isNullOrEmpty(target)) {
+        hasFailed = true;
+        $("#targetTopic").addClass("badTopic");
+    }
+
+    if (hasFailed) {
+        setFailureToast("Cannot have empty fields");
+        showToast();
+        return;
+    }
+
     if (start === target) {
+        $("#startTopic").addClass("badTopic");
+        $("#targetTopic").addClass("badTopic");
         setFailureToast("Cannot have same start and target.");
         showToast();
         return;
     }
 
-    searchArticle(start, function() {
-        searchArticle(target, function() {
+    searchArticle({ search: start, topicInputId: "#startTopic", callbackFn: function() {
+        searchArticle({ search: target, topicInputId: "#targetTopic", callbackFn: function() {
             gameProps.start = start;
             gameProps.target = target;
             gameProps.clicks = 0;
@@ -150,8 +184,8 @@ function startGame(start, target) {
             showElement("#gameStats");
 
             setGameBoard(start);
-        })
-    });
+        }})
+    }});
 }
 
 function setGameBoard(topic) {
@@ -258,6 +292,10 @@ function newGame() {
     window.history.pushState("", "", gameProps.url);
     toggleHistory();
 
+    clearTopicStatus("#searchTopic");
+    clearTopicStatus("#startTopic");
+    clearTopicStatus("#targetTopic");
+
     $("#startTopic").val("");
     $("#targetTopic").val("");
     $("#searchTopic").val("");
@@ -270,6 +308,7 @@ function newGame() {
     hideElement("#newGameSection");
     hideElement("#copied");
     hideElement("#gameStats");
+    hideElement("#redirectMessage");
 
     closeModal();
 
@@ -298,13 +337,13 @@ function updateHistoryList() {
 }
 
 function setSuccessToast(message) {
-    $("#searchToast").css("background-color", "green");
+    $("#searchToast").css("background-color", "#99ff99");
     $("#searchToastHeader").text("Success");
     $("#searchToastBody").text(message);
 }
 
 function setFailureToast(message) {
-    $("#searchToast").css("background-color", "red");
+    $("#searchToast").css("background-color", "#ff9999");
     $("#searchToastHeader").text("Failure");
     $("#searchToastBody").text(message);
 }
@@ -341,6 +380,11 @@ function topicExists(topic, searchResults) {
     });
 
     return found;
+}
+
+function clearTopicStatus(topicInputId) {
+    $(topicInputId).removeClass("goodTopic");
+    $(topicInputId).removeClass("badTopic");
 }
 
 function setModal(settings) {

@@ -100,7 +100,7 @@
 
 #shareableLinkButton {
   display: inline-flex;
-  margin: 17px auto 0px auto;
+  margin: 15px auto;
   position: absolute;
   top: 40%;
   -ms-transform: translateY(-50%);
@@ -166,4 +166,30 @@
 
 #followClickCounter:hover {
   cursor: auto;
+}
+
+#currentTargetLabel {
+  margin: 19px auto;
+}
+
+@media (max-width: 768px) {
+  #newGameSection {
+      height:150px;
+  }
+
+  #shareableLinkButton {
+    margin: -10px 0px 0px -30px;
+  }
+} 
+
+@media (max-width: 575px) {
+  #shareableLinkButton {
+    margin: 0px;
+  }
+}
+
+.fill-height {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
 }

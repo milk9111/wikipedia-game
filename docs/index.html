@@ -53,22 +53,21 @@
             </div>
 
             <div class="d-none" id="newGameSection">
-                <div class="form-group">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-sm-5">
-                                <button class="btn btn-primary d-none" id="newGameButton" onclick="confirmNewGame();">New Game?</button>
-                            </div>
-                            <div class="col-sm-6">
-                                <input class="d-none" id="hiddenUrl">
-                                <div id="shareableLinkButton"  onclick="copyToClipboard();">
-                                    <i class="bi bi-link-45deg"></i>
-                                    <p id="clipboardTooltip" data-toggle="tooltip" title="Copy to clipboard">Shareable Link</p>
-                                    <i class="d-none bi bi-clipboard-check" id="copied"></i>
-                                </div>
-                            </div>
+                <div class="row h-100">
+                    <div class="col-sm-4">
+                        <button class="btn btn-primary d-none" id="newGameButton" onclick="confirmNewGame();">New Game?</button>                            
+                    </div>
+                    <div class="col-sm-4">
+                        <h5 id="currentTargetLabel">Target: <span id="currentTarget"></span></h5>                        
+                    </div>
+                    <div class="col-sm-4">
+                        <input class="d-none" id="hiddenUrl">
+                        <div id="shareableLinkButton"  onclick="copyToClipboard();">
+                            <i class="bi bi-link-45deg"></i>
+                            <p id="clipboardTooltip" data-toggle="tooltip" title="Copy to clipboard">Shareable Link</p>
+                            <i class="d-none bi bi-clipboard-check" id="copied"></i>
                         </div>
-                    </div>                
+                    </div>
                 </div>
             </div>
       </div>
@@ -100,26 +99,21 @@
                 </div>
             </div>
             <div id="gameStats" class="d-none">
-                <div class="form-group">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-sm-5">
-                                <label for="clickCounter">Number of Clicks</label>
-                                <h5 id="clickCounter">0</h5>
-                            </div>
-                            <div class="col-sm-6">
-                                <label id="historyListLabel" for="historyList" onclick="toggleHistory();">The Rabbit Hole <i id="historyListToggle" class="bi bi-chevron-down"></i></label>
-                                <ul id="historyList" class="d-none">
-                
-                                </ul>
-                            </div>
-                        </div>
+                <div class="row">
+                    <div class="col-sm-5">
+                        <label for="clickCounter">Number of Clicks</label>
+                        <h5 id="clickCounter">0</h5>
+                    </div>
+                    <div class="col-sm-6">
+                        <label id="historyListLabel" for="historyList" onclick="toggleHistory();">The Rabbit Hole <i id="historyListToggle" class="bi bi-chevron-down"></i></label>
+                        <ul id="historyList" class="d-none">
+        
+                        </ul>
                     </div>
                 </div>
             </div>
       </div>
   </div>
-  <br>
   <br>
   <!-- MODAL SECTION -->
   <div id="myModal" class="modal">
@@ -137,7 +131,9 @@
             </div>
         </div>
   </div>
-  <p class="text-danger d-none" id="redirectMessage">*Clicks are not counted on redirect pages</p>
+    <div class="alert alert-danger d-none" role="alert" id="redirectMessage">
+            *Clicks are not counted on redirect pages
+    </div>
     <div id="followingElements" class="d-none">
         <p class="btn btn-light" id="followClickCounter">0</p>
         <button onclick="topFunction()" id="backToTopButton" title="Go to top">Top</button>

@@ -178,6 +178,7 @@ function startGame(start, target) {
             $("#historyList").empty();
             $("#clickCounter").text(gameProps.clicks);
             $("#followClickCounter").text(gameProps.clicks);
+            $("#currentTarget").text(target);
 
             hideElement("#searchForm");
             hideElement("#submitForm");

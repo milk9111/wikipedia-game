@@ -52,10 +52,25 @@
                 </form>
             </div>
 
-            <div class="form-group">
-                <button class="btn btn-primary d-none" id="newGameButton" onclick="confirmNewGame();">New Game?</button>
+            <div class="d-none" id="newGameSection">
+                <div class="form-group">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <button class="btn btn-primary d-none" id="newGameButton" onclick="confirmNewGame();">New Game?</button>
+                            </div>
+                            <div class="col-sm-6">
+                                <input class="d-none" id="hiddenUrl">
+                                <div id="shareableLinkButton"  onclick="copyToClipboard();">
+                                    <i class="bi bi-link-45deg"></i>
+                                    <p id="clipboardTooltip" data-toggle="tooltip" title="Copy to clipboard">Shareable Link</p>
+                                    <i class="d-none bi bi-clipboard-check" id="copied"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                
+                </div>
             </div>
-            
       </div>
       <div class="col-sm-6">
           <!-- SEARCH INPUT SECTION -->
@@ -84,18 +99,20 @@
                     <br/>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-5">
-                            <label for="clickCounter">Number of Clicks</label>
-                            <h5 id="clickCounter">0</h5>
-                        </div>
-                        <div class="col-sm-6">
-                            <label id="historyListLabel" for="historyList" onclick="toggleHistory();">The Rabbit Hole <i id="historyListToggle" class="bi bi-chevron-down"></i></label>
-                            <ul id="historyList" class="d-none">
-            
-                            </ul>
+            <div id="gameStats" class="d-none">
+                <div class="form-group">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <label for="clickCounter">Number of Clicks</label>
+                                <h5 id="clickCounter">0</h5>
+                            </div>
+                            <div class="col-sm-6">
+                                <label id="historyListLabel" for="historyList" onclick="toggleHistory();">The Rabbit Hole <i id="historyListToggle" class="bi bi-chevron-down"></i></label>
+                                <ul id="historyList" class="d-none">
+                
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -177,11 +194,15 @@
         }
     }
 
+    $("#shareableLinkButton").mouseleave(function() {
+        $("#clipboardTooltip").attr("data-original-title", "Copy to clipboard");
+    });
+
     $("#modalClose").on("click", function(event) {
         closeModal();
     });
 
-    //startGame('mario', '');
+    //startGame('mario', 'super mario');
 </script>
 
 </body>

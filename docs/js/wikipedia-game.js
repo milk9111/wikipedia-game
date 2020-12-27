@@ -3,6 +3,26 @@ $('.toast').toast({
     'autohide': false
 });
 
+jQuery(function() {
+    $('[data-toggle="tooltip"]').tooltip();
+
+    let startTopic = getQueryParameterByName("start");
+    let targetTopic = getQueryParameterByName("target");
+
+    if (isNullOrEmpty(startTopic) || isNullOrEmpty(targetTopic)) {
+        return;
+    }
+
+    // it should be assumed that if the start and target are given then they have already been validated so just hide the fields
+    // for style purposes.
+    hideElement("#searchForm");
+    hideElement("#submitForm");
+
+    startGame(startTopic, targetTopic);
+
+
+});
+
 let gameProps = {
     start: "",
     target: "",
@@ -11,15 +31,46 @@ let gameProps = {
     history: [],
     isHistoryShowing: false,
     hasWon: false,
+    url: window.location.href,
+    baseUrl: getBaseUrl(),
+    queryParams: "",
     modal: {
         contentId: "modalContent_default"
     }
 };
 
+function getBaseUrl() {
+    let queryParamsStartPos = window.location.href.indexOf("?");
+    if (queryParamsStartPos === -1) {
+        return window.location.href;
+    }
+
+    return window.location.href.substring(0, queryParamsStartPos);
+}
+
+function copyToClipboard() {
+    showElement("#hiddenUrl");
+    var copyText = document.getElementById("hiddenUrl");
+
+    copyText.value = gameProps.url;
+
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); 
+
+    document.execCommand("copy");
+    $("#clipboardTooltip").attr("data-original-title", "Copied!");
+
+    $('[data-toggle="tooltip"]').tooltip('hide')
+      .tooltip('show');
+
+    hideElement("#hiddenUrl");
+    showElement("#copied");
+}
+
 function searchArticle(search, callbackFn) {
     hideElement("#topicSearchDropdown");
 
-    if (search === "" || search === null || search === undefined) {
+    if (isNullOrEmpty(search)) {
         setFailureToast("Cannot be empty.");
         showToast();
         return;
@@ -77,6 +128,16 @@ function startGame(start, target) {
             gameProps.history = [];
             gameProps.isHistoryShowing = false;
             gameProps.hasWon = false;
+            gameProps.queryParams = "";
+
+            if (gameProps.url === gameProps.baseUrl) {
+                gameProps.queryParams = "?start=" + encodeURIComponent(start) + "&target=" + encodeURIComponent(target);
+                gameProps.url = gameProps.baseUrl + gameProps.queryParams;
+            }
+
+            $("#hiddenUrl").val(gameProps.url);
+
+            history.pushState("", "", gameProps.queryParams);
 
             $("#historyList").empty();
             $("#clickCounter").text(gameProps.clicks);
@@ -84,7 +145,9 @@ function startGame(start, target) {
             hideElement("#searchForm");
             hideElement("#submitForm");
 
+            showElement("#newGameSection");
             showElement("#newGameButton");
+            showElement("#gameStats");
 
             setGameBoard(start);
         })
@@ -101,7 +164,7 @@ function setGameBoard(topic) {
         method: "GET",
         url: "https://en.wikipedia.org/w/api.php?origin=*&action=parse&format=json&prop=text&formatversion=2&page=" + encodeTopic(topic),
         success: function(result, status, xhr) {
-            if (xhr.status !== 200 || result === null || result.parse === null || result.parse.text === null || result.parse.text === "") {
+            if (xhr.status !== 200 || result === null || result.parse === null || isNullOrEmpty(result.parse.text)) {
                 alert("Invalid start topic");
                 return;
             }
@@ -150,6 +213,11 @@ function setGameBoard(topic) {
             } else if (urlPrefix[0] !== '#' && urlPrefix[0] !== '/') {
                 event.preventDefault();
                 alert("External links aren't allowed!");
+            } else if (urlPrefix[0] === '#') {
+                event.preventDefault();
+                $('html, body').animate({
+                    scrollTop: $(href).offset().top
+                }, 10);
             }
         });
     });
@@ -186,6 +254,8 @@ function newGame() {
     gameProps.history = [];
     gameProps.isHistoryShowing = false;
     gameProps.hasWon = false;
+    gameProps.url = gameProps.baseUrl;
+    window.history.pushState("", "", gameProps.url);
     toggleHistory();
 
     $("#startTopic").val("");
@@ -197,6 +267,9 @@ function newGame() {
 
     hideElement("#content");
     hideElement("#newGameButton");
+    hideElement("#newGameSection");
+    hideElement("#copied");
+    hideElement("#gameStats");
 
     closeModal();
 
@@ -239,6 +312,10 @@ function setFailureToast(message) {
 function showToast() {
     $('#searchToast').toast('show');
 }
+
+function supports_history_api() {
+    return !!(window.history && history.pushState);
+  }
 
 function hideElement(el) {
     $(el).addClass("d-none");
@@ -292,4 +369,17 @@ function showModal() {
 
 function closeModal() {
     $("#myModal").css("display", "none");
+}
+
+function getQueryParameterByName(name, url = window.location.href) {
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+function isNullOrEmpty(string) {
+    return string === null || string === undefined || string === "";
 }

@@ -43,6 +43,7 @@
 
 #historyListLabel:hover {
   border-bottom: 1px solid black;
+  cursor: pointer;
 }
 
 #historyListToggle {
@@ -57,8 +58,6 @@
 #newGameButton {
   display: block;
   margin: 17px auto 0px auto;
-  width: 50%;
-  padding: 10px;
 }
 
 .modal {
@@ -97,4 +96,23 @@
   color: #000;
   text-decoration: none;
   cursor: pointer;
+}
+
+#shareableLinkButton {
+  display: inline-flex;
+  margin: 17px auto 0px auto;
+  position: absolute;
+  top: 40%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  color: #0000EE;
+}
+
+#shareableLinkButton:hover {
+  border-bottom: 1px solid #0000EE;
+  cursor: pointer;
+}
+
+#copied {
+  margin: 5px 0px 0px 5px;
 }

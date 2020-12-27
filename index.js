@@ -16,7 +16,7 @@ http.createServer(function (req, res) {
     console.log(req.method + ' ' + req.url)
 
     let url = req.url;
-    if (url === "" || url === "/" || url === "/?" || url === undefined || url === null) {
+    if (url === "" || url === "/" || startsWith(url, "/?") || startsWith(url, "?") || url === undefined || url === null) {
         url = "/index.html";
     }
 
@@ -42,5 +42,13 @@ http.createServer(function (req, res) {
         return res.end();
   });
 }).listen(8080); 
+
+function startsWith(string, substring) {
+    if (string.length < substring.length) {
+        return false;
+    }
+
+    return string.substring(0, substring.length) === substring;
+}
 
 console.log("Started server");

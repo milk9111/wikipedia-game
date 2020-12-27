@@ -221,6 +221,9 @@ function setGameBoard(topic) {
 
             $("#mw-content-text").empty();
             $("#mw-content-text").append(result.parse.text);
+
+            // remove all edit links from the article
+            $(".mw-editsection").empty();
         }
     }).done(function(msg){
         hideElement("#loadingSpinner");
@@ -229,7 +232,8 @@ function setGameBoard(topic) {
 
         if (encodeTopic(topic).toLowerCase() === encodeTopic(gameProps.target).toLowerCase()) {
             gameProps.hasWon = true;
-            alert("You won the game in " + gameProps.clicks + " clicks!");
+            let plural = gameProps.clicks === 1 ? "" : "s";
+            alert("You won the game in " + gameProps.clicks + " click" + plural + "!");
         }
 
         $("a").on("click", function(event){

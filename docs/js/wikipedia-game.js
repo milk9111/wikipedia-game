@@ -230,7 +230,7 @@ function setGameBoard(topic) {
 
         gameProps.hasWon = false;
 
-        if (encodeTopic(topic).toLowerCase() === encodeTopic(gameProps.target).toLowerCase()) {
+        if (decodeURIComponent(encodeTopic(topic)).toLowerCase() === encodeTopic(gameProps.target).toLowerCase()) {
             gameProps.hasWon = true;
             let plural = gameProps.clicks === 1 ? "" : "s";
             alert("You won the game in " + gameProps.clicks + " click" + plural + "!");
@@ -428,7 +428,7 @@ function showElement(el) {
 }
 
 function encodeTopic(topic) {
-    return topic.replace(" ", "_");
+    return topic.replaceAll(" ", "_");
 }
 
 function topicExists(topic, searchResults) {

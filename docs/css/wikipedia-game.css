@@ -193,3 +193,14 @@
   height: auto !important;
   height: 100%;
 }
+
+#randomTopicButton {
+  margin-left: 10px;
+  background-color: white;
+}
+
+#randomTopicButton:hover {
+  margin-left: 10px;
+  background-color: gray;
+  color: white;
+}

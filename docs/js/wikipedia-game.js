@@ -267,6 +267,57 @@ function setGameBoard(topic) {
     });
 }
 
+function randomTopics() {
+    let startSearch = String.fromCharCode(Math.floor(Math.random() * 26) + 97);
+    let targetSearch = String.fromCharCode(Math.floor(Math.random() * 26) + 97);
+
+    let start = "";
+    let target = "";
+
+    let failedApiCall = false;
+
+    showElement("#loadingSpinnerSearch");
+
+    $.ajax(
+        { 
+            url: "https://en.wikipedia.org/w/api.php?origin=*&action=query&format=json&list=search&srlimit=10&srsort=random&srsearch=" + startSearch, 
+            success: function(result, status, xhr){
+                if (xhr.status !== 200 || result === null || result.query === null || result.query.search === null || result.query.search.length === 0) {
+                    setFailureToast("Failed to randomly select topics");
+                    showToast();
+                    failedApiCall = true;
+                    return;
+                } 
+
+                start = result.query.search[0].title;
+
+                $.ajax(
+                    { 
+                        url: "https://en.wikipedia.org/w/api.php?origin=*&action=query&format=json&list=search&srlimit=10&srsort=random&srsearch=" + targetSearch, 
+                        success: function(result2, status2, xhr2){
+                            if (xhr2.status !== 200 || result2 === null || result2.query === null || result2.query.search === null || result2.query.search.length === 0) {
+                                setFailureToast("Failed to randomly select topics");
+                                showToast();
+                                failedApiCall = true;
+                                return;
+                            } 
+            
+                            target = result2.query.search[0].title;
+                        }
+                    }
+                ).done(function(msg) {
+                    hideElement("#loadingSpinnerSearch");
+                    
+                    if (!failedApiCall) {
+                        $("#startTopic").val(start);
+                        $("#targetTopic").val(target);
+                    }
+                });
+            }
+        }
+    );
+}
+
 function confirmNewGame() {
     // if the player has won and they select a new game then don't bother with the modal
     if (gameProps.hasWon) {

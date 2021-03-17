@@ -7,7 +7,7 @@ Welcome to The Wikipedia Game!
 
 The goal is to reach the target Wikipedia article topic by clicking through Wikipedia articles in the least number of article clicks. 
 
-Only clicks to other wikipedia articles are counted. External links are not. 
+Only clicks to other wikipedia articles are counted. External links (these don't go anywhere inside the game) and links to other sections within the same article are not. 
 
 You can choose your own starting and target topics or click the `Random` button if you want to just see what's out there. Be warned that Random can be quite difficult and lead to what could be considered "inappropriate" articles so use at your own discretion.
 
